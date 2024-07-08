@@ -1,7 +1,7 @@
-# stage1 as builder
+# สเตจแรก: Builder
 FROM node:20-alpine as builder
 
-# copy the package.json to install dependencies
+# คัดลอก package.json และ package-lock.json ไปยังไดเรกทอรีทำงาน
 COPY package.json package-lock.json ./
 
 # Install the dependencies and make the folder
@@ -30,7 +30,11 @@ COPY ./SSL/private-key.key /etc/nginx/ssl/private-key.key
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stahg 1
-COPY --from=builder /packing/out /usr/share/nginx/html
+# COPY --from=builder /packing/out /usr/share/nginx/html
+
+# คัดลอกไฟล์จากสเตจ builder ไปยังไดเรกทอรีที่ nginx ใช้ chatGPT
+COPY --from=builder /packing/.next /usr/share/nginx/html
+COPY --from=builder /packing/public /usr/share/nginx/html
 
 EXPOSE 3000 80
 
