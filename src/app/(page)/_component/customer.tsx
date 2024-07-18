@@ -19,7 +19,7 @@ export default function Customer() {
             
             {/* ))} */}
             {[1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13].map((news: any,index:number) => (
-            <div className=" rounded-2xl shadow-md">
+            <div className=" rounded-2xl shadow-md" key={index}>
             <div className="  relative h-[100px]  w-[100px] flex justify-center items-center ">
                     <Image
                       src={ `/customer${news}.png`}

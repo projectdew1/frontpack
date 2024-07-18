@@ -2,6 +2,11 @@ import { Breadcrumb } from "antd";
 import Link from "next/link";
 import Image from "next/image";
 import NewsSlider from "../_component/newsSlider";
+import { Metadata } from "next/types";
+
+export const metadata: Metadata = {
+  title: 'เกี่ยวกับ | KMS',
+}
 
 export default function About() {
   return (

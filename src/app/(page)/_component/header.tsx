@@ -23,7 +23,7 @@ const navData: NavData[] = [
   { id: 1, name: "ผลิตภัณฑ์", link: "/shop" },
   { id: 2, name: "เกี่ยวกับ KMS", link: "/about" },
   // { id: 3, name: "วิธีสั่งซื้อและชำระเงิน", link: "/payment" },
-  // { id: 4, name: "บทความ", link: "/article" },
+  { id: 4, name: "ข่าวและบทความ", link: "/blog" },
   { id: 5, name: "ติดต่อเรา", link: "/contact" },
 ];
 
@@ -71,6 +71,7 @@ const Header = () => {
     ))}
     listitems.push({ key: "1", label: <Link href={"/"}>{"หน้าหลัก"}</Link> })
     listitems.push({ key: "2", label: <Link href={"/about"}>{"เกี่ยวกับ KMS"}</Link> })
+    listitems.push({ key: "3", label: <Link href={"/blog"}>{"ข่าวและบทความ"}</Link> })
     listitems.push({ key: "3", label: <Link href={"/contact"}>{"ติดต่อเรา"}</Link> })
     listitems.push({ key: "4", label: "ผลิตภัณฑ์", children: children})
     return listitems;

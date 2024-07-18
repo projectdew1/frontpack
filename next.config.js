@@ -14,6 +14,12 @@ const nextConfig = {
             port: '5003',
             pathname: '/machine/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'kmspacking.com',
+            port: '5003',
+            pathname: '/blog/**',
+          },
         ],
       },
 }

@@ -3,6 +3,7 @@ const master = "authorization"
 // const hosting = "https://localhost:5001"
 // const ImageHosting = "https://localhost:5001"
 
+
 const hosting = "https://kmspacking.com:5003"
 const ImageHosting = "https://kmspacking.com:5003"
 const tailer = "| KMS MACHINERY Co. Ltd | บริษัท เคเอ็มเอส แมชชีนเนอรี่ จำกัด"
@@ -12,6 +13,7 @@ const contact = host + "/contact"
 const category = host + "/product"
 const page = host + "/page"
 const blog = host + "/blog"
+const news = host + "/news"
 
 const api = {
 	mock: category + "/get",
@@ -72,6 +74,17 @@ const api = {
 	deleteBlog: blog + "/deleteBlog",
 	idBlog: blog + "/idBlog",
 	listBolg: blog + "/listBlogid",
+
+	//news
+	getNews:news + "/getNews",
+	getNewsAll:news + "/getNewsAll",
+	addNews:news + "/addNews",
+	updateNews:news + "/updateNews",
+	deleteNews:news + "/deleteNews",
+	findNews:news + "/findNews",
+	findNewsShow:news + "/findNewsShow",
+	findNewsIdShow:news + "/findNewsIdShow",
+	getTypeNews:news + "/getTypeNews",
 }
 
 export default {
