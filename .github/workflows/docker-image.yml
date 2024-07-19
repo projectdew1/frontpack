@@ -35,6 +35,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+         docker image rm ${{ secrets.DOCKERHUB_FE }}
          docker pull ${{ secrets.DOCKERHUB_FE }}
          docker stop pack || true
          docker run --rm --name pack -p 443:443 -p 80:80 ${{ secrets.DOCKERHUB_FE }}
