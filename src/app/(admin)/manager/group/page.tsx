@@ -281,7 +281,7 @@ export default function Group() {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(() => {
@@ -327,7 +327,7 @@ export default function Group() {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(() => {
@@ -364,7 +364,7 @@ export default function Group() {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
 
@@ -412,7 +412,7 @@ export default function Group() {
               cancelText: "ยกเลิก",
               okText: "ตกลง",
               title: "แจ้งเตือนจาก server!",
-              content: e.response.data.message,
+              content: e.response,
             });
         })
         .finally(async () => {
@@ -461,7 +461,7 @@ const addGroup = async (value:any) => {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(async () => {
@@ -508,7 +508,7 @@ const addGroup = async (value:any) => {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(() => {
