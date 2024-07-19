@@ -33,9 +33,6 @@ import Http from "@/hook/setApi/Http";
 
 import {convert } from "html-to-text"
 import Editor from "../../_component/editor";
-import Quill from "quill";
-
-const Delta = Quill.import('delta');
 
 
 
@@ -805,28 +802,14 @@ export default function Article() {
               <Button disabled={!isEdit}>อัพโหลดภาพ</Button>
             </Upload>
           </Form.Item>
-          {/* <Form.Item
-            name="content"
-            label="เนื้อหา"
-          > */}
-          {/* </Form.Item> */}
+    
           <div className="my-4">
-          <Editor
+          {/* <Editor
         ref={quillRef}
         readOnly={!isEdit}
-        // defaultValue={new Delta()
-        //   .insert('Hello')
-        //   .insert('\n', { header: 1 })
-        //   .insert('Some ')
-        //   .insert('initial', { bold: true })
-        //   .insert(' ')
-        //   .insert('content', { underline: true })
-        //   .insert('\n')}
-        // onSelectionChange={setRange}
-        // onTextChange={setLastChange}
-      />
-        {/* <Button onClick={btnEditor}>test</Button> */}
-            {/* <ReactQuill   readOnly={!isEdit} theme="snow" value={valueContent} onChange={setValueContent}  placeholder="กรุณากรอกเนื้อหา!"/> */}
+       
+      /> */}
+       
             <p className="hidden">Current value: {valueContent}</p> 
           </div>
           <div className="flex justify-end !mb-0">
