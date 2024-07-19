@@ -6,6 +6,8 @@ const master = "authorization"
 
 const hosting = "https://kmspacking.com:5003"
 const ImageHosting = "https://kmspacking.com:5003"
+const base_url = "https://kmspacking.com"
+
 const tailer = "| KMS MACHINERY Co. Ltd | บริษัท เคเอ็มเอส แมชชีนเนอรี่ จำกัด"
 const host = hosting + "/api"
 const admin = host + "/admin"
@@ -93,4 +95,5 @@ export default {
 	hosting,
 	ImageHosting,
 	tailer,
+	base_url
 }

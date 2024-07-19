@@ -22,13 +22,13 @@ async function getData() {
   };
 }
 
-// export async function generateMetadata() {
-//   const {  seo } = await getData();
-//   return {
-//     title:  `${seo} ${Config.tailer}`,
-//     description: `${seo}`,
-//   }
-// }
+export async function generateMetadata() {
+  const {  seo } = await getData();
+  return {
+    title:  `${seo} ${Config.tailer}`,
+    description: `${seo}`,
+  }
+}
 
 export default async function Shop() {
   const { posts } = await getData();

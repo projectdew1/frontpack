@@ -5,7 +5,7 @@ import NewsSlider from "../_component/newsSlider";
 import { Metadata } from "next/types";
 
 export const metadata: Metadata = {
-  title: 'เกี่ยวกับ | KMS',
+  title: 'เกี่ยวกับ | KMS ศูนย์รวมเครื่องบรรจุภัณฑ์ สินค้าได้รับมาตรฐาน บริการจริงใจ พร้อมส่งทั่วประเทศไทย',
 }
 
 export default function About() {

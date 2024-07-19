@@ -10,7 +10,7 @@ import NewsSlider from '../_component/newsSlider';
 
 
 export const metadata: Metadata = {
-  title: 'ติดต่อเรา | KMS',
+  title: 'ติดต่อเรา | KMS ศูนย์รวมเครื่องบรรจุภัณฑ์ สินค้าได้รับมาตรฐาน บริการจริงใจ พร้อมส่งทั่วประเทศไทย',
 }
 
 export default function Contact() {

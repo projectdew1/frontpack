@@ -7,7 +7,7 @@ import BestProduct from './_component/bestProduct';
 import Customer from './_component/customer';
 
 export const metadata: Metadata = {
-  title: 'หน้าหลัก | KMS',
+  title: 'หน้าหลัก | KMS ศูนย์รวมเครื่องบรรจุภัณฑ์ สินค้าได้รับมาตรฐาน บริการจริงใจ พร้อมส่งทั่วประเทศไทย',
 }
 
 export default function Home() {

@@ -6,7 +6,7 @@ import NewsBlog from "../_component/newsBlog";
 import { Metadata } from "next/types";
 
 export const metadata: Metadata = {
-  title: 'ข่าวและบทความ | KMS',
+  title: 'ข่าวและบทความ | KMS ศูนย์รวมเครื่องบรรจุภัณฑ์ สินค้าได้รับมาตรฐาน บริการจริงใจ พร้อมส่งทั่วประเทศไทย',
 }
 
 export default function Blog() {

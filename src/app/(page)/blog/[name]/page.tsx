@@ -5,6 +5,22 @@ import NewsSlider from "../../_component/newsSlider";
 import axios from "axios";
 import Config from "@/hook/setApi/Config";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { name: string };
+}) {
+  const { name } = params;
+  const {  seo,items } = await getData(`${decodeURIComponent(name)}`);
+  // const {img} = await getCatagory(`${decodeURIComponent(name)}`)
+  // const des = items.map((r:any) => r.typeName);
+  // console.log(img)
+  return {
+    title:  `${seo} ${Config.tailer}`,
+    // description: `${des.join(",")}`,
+  }
+}
+
 export default async function detailsBlog({
   params,
 }: {
