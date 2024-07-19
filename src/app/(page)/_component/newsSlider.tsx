@@ -32,7 +32,7 @@ const NewsSlider = () => {
       await Http.post(Config.api.getNews, null, {
         params: {
           pageNumber:1,
-          pageSize:10,
+          pageSize:6,
         },
       })
         .then((res) => {
@@ -85,16 +85,27 @@ const NewsSlider = () => {
             <SwiperSlide key={index} className="group border-r border-white break-all p-8 cursor-pointer">
               <Link key={`blog${index}`} href={`/blog/${news.id}`} className="!h-full !w-full flex flex-col ">
                 <div className=" relative h-[30vh] !w-full flex justify-center items-center ">
+                  {news.localImage == null ? <Image
+                   src="/no-image.png"
+                   alt={news.title}
+                   placeholder="blur"
+                   blurDataURL="/no-image.png"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
+                  /> :
                   <Image
                    src={Config.ImageHosting + news.localImage}
                    alt={news.title}
                    placeholder="blur"
-                   blurDataURL="./no-image.png"
+                   blurDataURL="/no-image.png"
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
                   />
+                  }
                   <div className="absolute rounded-full w-24 h-24 bg-kmspurple text-center flex justify-center items-center text-white opacity-0 font-extralight transition duration-300 group-hover:opacity-100">
                     ดูเนื้อหา
                   </div>

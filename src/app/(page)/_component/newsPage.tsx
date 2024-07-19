@@ -67,7 +67,7 @@ const getData = async ()  => {
                 key={index}
                 className="w-[350px] h-[540px] group relative cursor-pointer "
               >
-                <div className=" relative h-[250px]">
+               {news.localImage != null ? <div className=" relative h-[250px]">
                   <Image
                     src={Config.ImageHosting + news.localImage}
                     alt={news.title}
@@ -78,7 +78,7 @@ const getData = async ()  => {
                     // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className=" object-cover rounded-xl select-none" // just an example
                   />
-                </div>
+                </div> : null}
                 <div className=" absolute top-[180px] right-0 rounded-2xl shadow-lg p-[3px] h-[350px] w-11/12   group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:via-purple-500 group-hover:to-pink-500">
                 <div className="flex flex-col justify-between h-full w-full px-8 py-4 rounded-2xl bg-white ">  
                   <article>
