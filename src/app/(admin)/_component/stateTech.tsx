@@ -102,7 +102,7 @@ export default function StateTech() {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(() => {
@@ -161,7 +161,7 @@ export default function StateTech() {
                 cancelText: "ยกเลิก",
                 okText: "ตกลง",
                 title: "แจ้งเตือนจาก server!",
-                content: e.response.data.message,
+                content: e.response,
               });
         })
         .finally(async () => {
@@ -201,7 +201,7 @@ const editTechnical = async ({ techName }:FieldType) => {
                 cancelText: "ยกเลิก",
                 okText: "ตกลง",
                 title: "แจ้งเตือนจาก server!",
-                content: e.response.data.message,
+                content: e.response,
               });
         })
         .finally(async () => {
@@ -245,7 +245,7 @@ const deleteTechnical = async (id:any) => {
                 cancelText: "ยกเลิก",
                 okText: "ตกลง",
                 title: "แจ้งเตือนจาก server!",
-                content: e.response.data.message,
+                content: e.response,
               });
         })
         .finally(() => {

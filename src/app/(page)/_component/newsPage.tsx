@@ -46,7 +46,7 @@ const getData = async ()  => {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e.response.data.message,
+          content: e.response,
         });
       })
       .finally(() => {
