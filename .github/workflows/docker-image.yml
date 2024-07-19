@@ -33,8 +33,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: ${{ secrets.SSH_PORT }}
-    #     script: |
-    #      docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-    #      docker pull ${{ secrets.DOCKERHUB_BE }}
-    #      docker stop backend || true
-    #      docker run --rm -d --name backend -v /backupImage:/app/wwwroot -p 5004:80 -p 5003:443 -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORT=5003 -e ASPNETCORE_Kestrel__Certificates__Default__Password="password" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/server.pfx -v /cer/:/https/ ${{ secrets.DOCKERHUB_BE }}
+        script: |
+         docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+         docker pull ${{ secrets.DOCKERHUB_FE }}
+         docker stop pack || true
+         docker run --rm --name pack -p 443:443 -p 80:80 ${{ secrets.DOCKERHUB_FE }}
+        
