@@ -432,11 +432,13 @@ export default function Article() {
 
 		let data = new FormData()
 		data.append("FormFile", upload)
+    data.append("Content", quillRef.current.root.innerHTML)
 		if (value.uploadmulti) {
 			if (value.uploadmulti.length > 0) {
 				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
 			}
 		}
+
 
 		setSpinning(true)
 		setLoading(true)
@@ -445,7 +447,6 @@ export default function Article() {
 				seo: value.seo,
 				typeNewsId: value.type,
         title: value.title,
-        content:quillRef.current.root.innerHTML,
         user: token,
 			},
 			headers: {
@@ -499,6 +500,7 @@ export default function Article() {
 
 		let data = new FormData()
 		data.append("FormFile", upload)
+    data.append("Content", quillRef.current.root.innerHTML)
 		if (value.uploadmulti) {
 			if (value.uploadmulti.length > 0) {
 				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
@@ -513,7 +515,6 @@ export default function Article() {
 				seo: value.seo,
 				typeNewsId: value.type,
         title: value.title,
-        content:quillRef.current.root.innerHTML,
         user: token,
 			},
 			headers: {

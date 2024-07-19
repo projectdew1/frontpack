@@ -88,6 +88,8 @@ const NewsSlider = () => {
                   <Image
                    src={Config.ImageHosting + news.localImage}
                    alt={news.title}
+                   placeholder="blur"
+                   blurDataURL="./no-image.png"
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

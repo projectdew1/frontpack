@@ -20,6 +20,24 @@ const nextConfig = {
             port: '5003',
             pathname: '/blog/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'localhost',
+            port: '5001',
+            pathname: '/category/**',
+          },
+          {
+            protocol: 'https',
+            hostname: 'localhost',
+            port: '5001',
+            pathname: '/machine/**',
+          },
+          {
+            protocol: 'https',
+            hostname: 'localhost',
+            port: '5001',
+            pathname: '/blog/**',
+          },
         ],
       },
 }
