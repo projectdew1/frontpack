@@ -1,3 +1,5 @@
+"use client";
+
 import Config from "@/hook/setApi/Config";
 import Http from "@/hook/setApi/Http";
 import { Modal, Spin } from "antd";
@@ -18,7 +20,7 @@ import axios from "axios";
 
 
 
-export default async function NewsDetail({
+export default  function NewsDetail({
   rows,
 }: {
   rows:any ;
