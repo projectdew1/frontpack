@@ -109,5 +109,5 @@ const getData = async ()  => {
       <Spin spinning={loading} fullscreen />
       {contextHolder}
     </div>
-  ) : null;
+  ) : <div>{data.length}</div>;
 }
