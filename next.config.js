@@ -1,5 +1,6 @@
 // /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
     images: {
         remotePatterns: [
           {
@@ -23,19 +24,19 @@ const nextConfig = {
           {
             protocol: 'https',
             hostname: 'localhost',
-            port: '5001',
+            port: '5003',
             pathname: '/category/**',
           },
           {
             protocol: 'https',
             hostname: 'localhost',
-            port: '5001',
+            port: '5003',
             pathname: '/machine/**',
           },
           {
             protocol: 'https',
             hostname: 'localhost',
-            port: '5001',
+            port: '5003',
             pathname: '/blog/**',
           },
         ],
