@@ -20,7 +20,7 @@ import axios from "axios";
 
 
 
-export default async function NewsDetail({
+export default  function NewsDetail({
   rows,
 }: {
   rows:any ;

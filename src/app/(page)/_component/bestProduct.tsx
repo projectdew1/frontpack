@@ -8,40 +8,44 @@ import Image from "next/image";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import Link from "next/link";
 
-const list = [
-  {
-    image: "https://kmspacking.com:5003/machine/M000127240223_173908.jpg",
-    link: "/product/TTAwMDEyNw==",
-    name: "เครื่องบรรจุแบบกะบะ รุ่น SK-160",
-  },
-  {
-    image: "https://kmspacking.com:5003/machine/M000097240223_174518.png",
-    link: "/product/TTAwMDA5Nw==",
-    name: "เครื่องบรรจุผงแบบสกรูอัตโนมัติ รุ่น OMW-FL420",
-  },
-  {
-    image: "https://kmspacking.com:5003/machine/M000142260223_154500.png",
-    link: "/product/TTAwMDE0Mg==",
-    name: "เครื่องตัดแอลซีลพร้อมอบฟิล์มหดอัตโนมัติ",
-  },
-  {
-    image: "https://kmspacking.com:5003/machine/M000033240223_151103.png",
-    link: "/product/TTAwMDAzMw==",
-    name: "เครื่องบรรจุซองสำเร็จรูป รุ่น OMW-200",
-  },
-  {
-    image: "https://kmspacking.com:5003/machine/M000022280223_154448.png",
-    link: "/product/TTAwMDAyMg==",
-    name: "เครื่องบรรจุแคปซูล รุ่น DTJ-V",
-  },
-  {
-    image: "https://kmspacking.com:5003/machine/M000118280223_155447.png",
-    link: "/product/TTAwMDExOA==",
-    name: "เครื่องบลิสเตอร์แพค บรรจุแผงยา รุ่น DPB-80",
-  },
-];
+
+
+
 
 export default function BestProduct() {
+  const list = [
+    {
+      image: "https://kmspacking.com:5003/machine/M000127240223_173908.jpg",
+      link: "/product/TTAwMDEyNw==",
+      name: "เครื่องบรรจุแบบกะบะ รุ่น SK-160",
+    },
+    {
+      image: "https://kmspacking.com:5003/machine/M000097240223_174518.png",
+      link: "/product/TTAwMDA5Nw==",
+      name: "เครื่องบรรจุผงแบบสกรูอัตโนมัติ รุ่น OMW-FL420",
+    },
+    {
+      image: "https://kmspacking.com:5003/machine/M000142260223_154500.png",
+      link: "/product/TTAwMDE0Mg==",
+      name: "เครื่องตัดแอลซีลพร้อมอบฟิล์มหดอัตโนมัติ",
+    },
+    {
+      image: "https://kmspacking.com:5003/machine/M000033240223_151103.png",
+      link: "/product/TTAwMDAzMw==",
+      name: "เครื่องบรรจุซองสำเร็จรูป รุ่น OMW-200",
+    },
+    {
+      image: "https://kmspacking.com:5003/machine/M000022280223_154448.png",
+      link: "/product/TTAwMDAyMg==",
+      name: "เครื่องบรรจุแคปซูล รุ่น DTJ-V",
+    },
+    {
+      image: "https://kmspacking.com:5003/machine/M000118280223_155447.png",
+      link: "/product/TTAwMDExOA==",
+      name: "เครื่องบลิสเตอร์แพค บรรจุแผงยา รุ่น DPB-80",
+    },
+  ];
+  
   return (
     <div className=" select-none bg-purple-50 py-8 ">
       <div className="flex justify-center">

@@ -33,7 +33,7 @@ export default async function detailsBlog({
       <div className=" w-full px-4 md:px-20 ">
         <div className=" pt-24 pb-8 md:pt-28  "></div>
 
-        <NewsDetail rows={items} />
+        <NewsDetail key={'detailPageBlog'} rows={items} />
       </div>
       <NewsSlider />
     </div>

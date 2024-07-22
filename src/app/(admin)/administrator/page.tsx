@@ -7,7 +7,6 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Config from "@/hook/setApi/Config";
 import axios from "axios";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { setToken } from "../_actions/token";
 import { setCookie } from 'cookies-next';
 
 
