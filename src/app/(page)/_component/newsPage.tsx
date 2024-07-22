@@ -20,9 +20,7 @@ const [loading, setLoading] = useState(false);
 useEffect(() => {
   
 
-  return () => {
-    getData()
-  }
+  getData()
 }, [])
 
 

@@ -22,9 +22,7 @@ const sizePage = 9;
   const [pageTotal, setPageTotal] = useState(1);
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const nextPage = async () => {

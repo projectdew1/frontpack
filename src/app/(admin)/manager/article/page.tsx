@@ -70,9 +70,7 @@ export default function Article() {
   const quillRef = useRef<any>();
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const columns: TableColumnsType<any> = [

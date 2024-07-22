@@ -68,9 +68,7 @@ export default function Catagory() {
   const [rowId, setRowId] = useState("");
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const columns: TableColumnsType<any> = [

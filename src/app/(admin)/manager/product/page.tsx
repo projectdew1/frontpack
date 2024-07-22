@@ -304,9 +304,7 @@ export default function Product() {
   ];
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const itemsDropdown = (row: any): MenuProps["items"] => {

@@ -198,9 +198,7 @@ export default function Group() {
   ];
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const itemsDropdown = (row: any): MenuProps["items"] => {

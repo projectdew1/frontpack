@@ -126,9 +126,7 @@ export default function Contact() {
   ];
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   const itemsDropdown = (row: any): MenuProps["items"] => {

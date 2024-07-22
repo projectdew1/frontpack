@@ -20,10 +20,7 @@ const NewsSlider = () => {
   
   useEffect(() => {
     
-  
-    return () => {
-      getData()
-    }
+    getData()
   }, [])
   
   

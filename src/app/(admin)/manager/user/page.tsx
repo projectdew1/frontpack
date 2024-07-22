@@ -458,9 +458,7 @@ export default function User() {
   };
 
   useEffect(() => {
-    return () => {
-      getData();
-    };
+    getData();
   }, []);
 
   return (
