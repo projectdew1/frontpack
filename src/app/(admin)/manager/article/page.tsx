@@ -802,7 +802,7 @@ export default function Article() {
           </Form.Item>
 
           <div className="my-4">
-            <Editor ref={quillRef} readOnly={!isEdit} />
+            {/* <Editor ref={quillRef} readOnly={!isEdit} /> */}
 
             <p className="hidden">Current value: {valueContent}</p>
           </div>
