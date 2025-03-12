@@ -9,49 +9,47 @@ import { useEffect, useState } from "react";
 import Http from "@/hook/setApi/Http";
 import Config from "@/hook/setApi/Config";
 
-import {convert } from "html-to-text"
+import { convert } from "html-to-text";
 import Link from "next/link";
 
 const NewsSlider = () => {
   const [modal, contextHolder] = Modal.useModal();
-  
-  const [data, setData] = useState([])
+
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
-    
-    getData()
-  }, [])
-  
-  
-  const getData = async ()  => {
+    getData();
+  }, []);
+
+  const getData = async () => {
     setLoading(true);
-      await Http.post(Config.api.getNews, null, {
-        params: {
-          pageNumber:1,
-          pageSize:6,
-        },
+    await Http.post(Config.api.getNews, null, {
+      params: {
+        pageNumber: 1,
+        pageSize: 6,
+      },
+    })
+      .then((res) => {
+        const data = res.data.message;
+        if (data === "success") {
+          const items = res.data.items;
+          setData(items);
+        }
       })
-        .then((res) => {
-          const data = res.data.message;
-          if (data === "success") {
-            const items = res.data.items;
-            setData(items);
-          }
-        })
-        .catch((e) => {
-          modal.error({
-            cancelText: "ยกเลิก",
-            okText: "ตกลง",
-            title: "แจ้งเตือนจาก server!",
-            content: e.response,
-          });
-        })
-        .finally(() => {
-          setLoading(false);
+      .catch((e) => {
+        modal.error({
+          cancelText: "ยกเลิก",
+          okText: "ตกลง",
+          title: "แจ้งเตือนจาก server!",
+          content: e.response,
         });
-  }
-  
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return data.length > 0 ? (
     <div className=" bg-kmsstone py-8 ">
       <div className="flex flex-row border-y border-white">
@@ -78,44 +76,55 @@ const NewsSlider = () => {
           }}
           className="!h-[500px] !w-full bg-kmsstone flex-auto"
         >
-          {data.map((news: any,index:number) => (
-            <SwiperSlide key={index} className="group border-r border-white break-all p-8 cursor-pointer">
-              <Link key={`blog${index}`} href={`/blog/${news.id}`} className="!h-full !w-full flex flex-col ">
-                <div className=" relative h-[30vh] !w-full flex justify-center items-center ">
-                  {news.localImage == null ? <Image
-                   src="/no-image.png"
-                   alt={news.title}
-                   placeholder="blur"
-                   blurDataURL="/no-image.png"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
-                  /> :
-                  <Image
-                   src={Config.ImageHosting + news.localImage}
-                   alt={news.title}
-                   placeholder="blur"
-                   blurDataURL="/no-image.png"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
-                  />
-                  }
+          {data.map((news: any, index: number) => (
+            <SwiperSlide
+              key={index}
+              className="group border-r border-white break-all p-8 cursor-pointer"
+            >
+              <Link
+                key={`blog${index}`}
+                href={`/blog/${news.id}`}
+                className="!h-full !w-full flex flex-col "
+              >
+                <div className=" relative min-h-[25vh] !w-full flex justify-center items-center overflow-hidden rounded-xl">
+                  {news.localImage == null ? (
+                    <Image
+                      src="/no-image.png"
+                      alt={news.title}
+                      placeholder="blur"
+                      blurDataURL="/no-image.png"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
+                    />
+                  ) : (
+                    <Image
+                      src={Config.ImageHosting + news.localImage}
+                      alt={news.title}
+                      placeholder="blur"
+                      blurDataURL="/no-image.png"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
+                    />
+                  )}
                   <div className="absolute rounded-full w-24 h-24 bg-kmspurple text-center flex justify-center items-center text-white opacity-0 font-extralight transition duration-300 group-hover:opacity-100">
                     ดูเนื้อหา
                   </div>
                 </div>
                 <article className="!w-full">
-                  <h4 className="mt-2 text-white font-extralight">{news.typeNews}</h4>
+                  <h4 className="mt-2 text-white font-extralight">
+                    {news.typeNews}
+                  </h4>
                   <p className="text-white font-light text-2xl line-clamp-2">
-                   {news.title}
+                    {news.title}
                   </p>
                   <p className="text-white  font-extralight mt-4 line-clamp-2 h-[100px]">
-                  {convert(news.content)}
+                    {convert(news.content)}
                   </p>
-                
+
                   <p className="text-white  font-extralight mt-4 text-right">
                     อ่านต่อ...
                   </p>
@@ -125,7 +134,11 @@ const NewsSlider = () => {
           ))}
 
           <SwiperSlide className="p-8">
-            <Link key={`blog`} href={`/blog`} className="group  cursor-pointer ">
+            <Link
+              key={`blog`}
+              href={`/blog`}
+              className="group  cursor-pointer "
+            >
               <div className=" bg-gray-500 h-full w-full flex flex-col justify-center items-center">
                 <div className="w-[100px] h-[100px] border border-white rounded-full group-hover:border-none group-hover:bg-kmspurple flex justify-center items-center">
                   <ArrowRightOutlined

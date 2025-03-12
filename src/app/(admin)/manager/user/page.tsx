@@ -100,7 +100,7 @@ export default function User() {
             <Button
               type="text"
               icon={<KeyOutlined />}
-              disabled={record.callBy != "dew"}
+              // disabled={record.callBy != "dew"}
               onClick={() => resetModal(record)}
             />
           </Tooltip>
@@ -277,11 +277,7 @@ export default function User() {
       // className: '!mb-0 bg-red-50',
       // wrapClassName: '!mb-0 bg-red-50',
       content: (
-        <Form
-          name="normal_login"
-          onFinish={onFinish}
-  autoComplete="off"
-        >
+        <Form name="normal_login" onFinish={onFinish} autoComplete="off">
           <Form.Item
             name="username"
             rules={[{ required: true, message: "กรุณากรอกผู้ใช้งาน!" }]}
@@ -326,90 +322,89 @@ export default function User() {
   };
 
   const addUser = async (values: FieldType) => {
-	
-		setLoading(true)
-		await Http.post(Config.api.adduser, null, {
-			params: {
-				username: values.username,
-				pass: values.password,
-				user: adToken
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+    setLoading(true);
+    await Http.post(Config.api.adduser, null, {
+      params: {
+        username: values.username,
+        pass: values.password,
+        user: adToken,
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "บันทึกเรียบร้อย!",
           });
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				setLoading(false)
-       
-				await getData()
-			})
-	}
+      })
+      .finally(async () => {
+        setLoading(false);
+
+        await getData();
+      });
+  };
 
   const onFinishChange: FormProps<FieldType>["onFinish"] = async (values) => {
     Modal.destroyAll();
-   await changePassword(values)
+    await changePassword(values);
   };
 
   const changePassword = async (values: FieldType) => {
-		setLoading(true)
-		await Http.put(Config.api.change, null, {
-			params: {
-				username: adToken,
-				pass: values.password,
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+    setLoading(true);
+    await Http.put(Config.api.change, null, {
+      params: {
+        username: adToken,
+        pass: values.password,
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "เปลี่ยนรหัสเรียบร้อย!",
           });
-				} else {
-					modal.error({
+        } else {
+          modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(() => {
-				setLoading(false)
+      })
+      .finally(() => {
+        setLoading(false);
         // Modal.destroyAll()
-			})
-	}
+      });
+  };
 
   const changeModal = () => {
     modal.confirm({
@@ -420,11 +415,9 @@ export default function User() {
         <Form
           name="normal_login"
           className="login-form"
-         
           onFinish={onFinishChange}
-   autoComplete="off"
+          autoComplete="off"
         >
-        
           <Form.Item
             className="mt-2"
             name="password"
@@ -482,9 +475,7 @@ export default function User() {
           </Button>
           <Button
             className="ml-2"
-      
             icon={<UndoOutlined />}
-           
             onClick={changeModal}
           >
             เปลี่ยนรหัส

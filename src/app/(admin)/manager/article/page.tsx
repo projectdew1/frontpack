@@ -31,10 +31,8 @@ import { jwtDecode } from "jwt-decode";
 import Config from "@/hook/setApi/Config";
 import Http from "@/hook/setApi/Http";
 
-import {convert } from "html-to-text"
+import { convert } from "html-to-text";
 import Editor from "../../_component/editor";
-
-
 
 const layout = {
   labelCol: { span: 4 },
@@ -61,7 +59,7 @@ export default function Article() {
   const [isAdd, setIsAdd] = useState(false);
   const [titleModal, setTitleModal] = useState("");
   const [rowId, setRowId] = useState("");
-  const [valueContent, setValueContent] = useState('');
+  const [valueContent, setValueContent] = useState("");
 
   const [spinning, setSpinning] = useState(false);
 
@@ -236,27 +234,26 @@ export default function Article() {
 
   const handleMenuClick = async (e: any, record: any) => {
     setIsAdd(false);
-   
+
     switch (e.key) {
       case "0":
-        getTypeData()
+        getTypeData();
         setRowId(record.newsId);
-        setValueContent("")
+        setValueContent("");
         await findContent(record.newsId);
         setTitleModal(`แก้ไขบทความ ${record.newsId}`);
         setIsEdit(true);
         setIsModalOpen(true);
-      
 
         break;
       case "1":
-        getTypeData()
-        setValueContent("")
+        getTypeData();
+        setValueContent("");
         await findContent(record.newsId);
         setTitleModal(`มุมมองบทความ ${record.newsId}`);
         setIsEdit(false);
-        setIsModalOpen(true)
-      
+        setIsModalOpen(true);
+
         break;
       case "3":
         modal.confirm({
@@ -309,7 +306,7 @@ export default function Article() {
         const data = res.data.message;
         if (data === "success") {
           const items = res.data.items;
-          setSelector(items)
+          setSelector(items);
           // setData(items);
           // setDataFilter(items);
         }
@@ -327,45 +324,45 @@ export default function Article() {
       });
   };
 
-  const deleteContent = async (id:any) => {
-    setSpinning(true)
-		setLoading(true)
-		await Http.delete(Config.api.deleteNews, {
-			params: {
-				id,
-			},
-		})
-			.then(res => {
-				const data = res.data.message
-				if (data === "success") {
+  const deleteContent = async (id: any) => {
+    setSpinning(true);
+    setLoading(true);
+    await Http.delete(Config.api.deleteNews, {
+      params: {
+        id,
+      },
+    })
+      .then((res) => {
+        const data = res.data.message;
+        if (data === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "ลบข้อมูลเรียบร้อย!",
           });
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: data,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-		setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
   const dataSelector = () => {
     const data = selector.map((r: any, i) => {
@@ -385,8 +382,8 @@ export default function Article() {
   };
 
   const addModal = () => {
-    setValueContent("")
-    getTypeData()
+    setValueContent("");
+    getTypeData();
     setIsModalOpen(true);
     setIsAdd(true);
     setTitleModal(`เพิ่มบทความ`);
@@ -403,12 +400,12 @@ export default function Article() {
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    if(convert(quillRef.current.root.innerHTML).trim() == ""){
+    if (convert(quillRef.current.root.innerHTML).trim() == "") {
       modal.error({
         cancelText: "ยกเลิก",
         okText: "ตกลง",
         title: "แจ้งเตือน",
-        content:'กรุณากรอกเนื้อหา',
+        content: "กรุณากรอกเนื้อหา",
       });
       return;
     }
@@ -420,139 +417,148 @@ export default function Article() {
     }
   };
 
-  const addContent = async (value:any) => {
+  const addContent = async (value: any) => {
     const cookies = getCookie(Config.master);
     const token = cookies ? jwtDecode<any>(cookies).user : null;
-		const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
 
-		let data = new FormData()
-		data.append("FormFile", upload)
-    data.append("Content", quillRef.current.root.innerHTML)
-		if (value.uploadmulti) {
-			if (value.uploadmulti.length > 0) {
-				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
-			}
-		}
+    let data = new FormData();
+    data.append("FormFile", upload);
+    data.append("Content", quillRef.current.root.innerHTML);
+    if (value.uploadmulti) {
+      if (value.uploadmulti.length > 0) {
+        value.uploadmulti.map((row: any) =>
+          data.append("FormFileMulti", row.originFileObj)
+        );
+      }
+    }
 
-
-		setSpinning(true)
-		setLoading(true)
-		await Http.post(Config.api.addNews, data, {
-			params: {
-				seo: value.seo,
-				typeNewsId: value.type,
+    setSpinning(true);
+    setLoading(true);
+    await Http.post(Config.api.addNews, data, {
+      params: {
+        seo: value.seo,
+        typeNewsId: value.type,
         title: value.title,
         user: token,
-			},
-			headers: {
-				"content-type": "multipart/form-data",
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+      },
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "บันทึกข้อมูลเรียบร้อย!",
             onOk() {
-              handleCancel()
+              handleCancel();
             },
             onCancel() {
-              handleCancel()
+              handleCancel();
             },
           });
-				
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-				setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
-  const updateContent = async (value:any) => {
+  const updateContent = async (value: any) => {
     const cookies = getCookie(Config.master);
     const token = cookies ? jwtDecode<any>(cookies).user : null;
-		const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
 
+    let data = new FormData();
+    data.append("FormFile", upload);
+    data.append("Content", quillRef.current.root.innerHTML);
+    if (value.uploadmulti) {
+      if (value.uploadmulti.length > 0) {
+        value.uploadmulti.map((row: any) =>
+          data.append("FormFileMulti", row.originFileObj)
+        );
+      }
+    }
 
-		let data = new FormData()
-		data.append("FormFile", upload)
-    data.append("Content", quillRef.current.root.innerHTML)
-		if (value.uploadmulti) {
-			if (value.uploadmulti.length > 0) {
-				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
-			}
-		}
-
-		setSpinning(true)
-		setLoading(true)
-		await Http.put(Config.api.updateNews, data, {
-			params: {
-				id: rowId,
-				seo: value.seo,
-				typeNewsId: value.type,
+    setSpinning(true);
+    setLoading(true);
+    await Http.put(Config.api.updateNews, data, {
+      params: {
+        id: rowId,
+        seo: value.seo,
+        typeNewsId: value.type,
         title: value.title,
         user: token,
-			},
-			headers: {
-				"content-type": "multipart/form-data",
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+      },
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แก้ไขข้อมูลเรียบร้อย!",
             onOk() {
-              handleCancel()
+              handleCancel();
             },
             onCancel() {
-              handleCancel()
+              handleCancel();
             },
           });
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-				setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
   const findContent = async (id: any) => {
     setLoading(true);
@@ -565,39 +571,37 @@ export default function Article() {
         const data = res.data.message;
         if (data === "success") {
           const items = res.data.items;
-    
+
           await multiImage(items.image);
 
           form.setFieldsValue({
             seo: items.newsSeo,
             title: items.title,
             type: items.typeNewsId,
-
           });
-       
-            if (items.fileImage !== null) {
-              let fileData = null;
-              let url = Config.ImageHosting + items.localImage;
-              // console.log(url)
-              await Http.get(Config.api.base64, {
-                params: {
-                  url,
-                },
-              }).then((res) => {
-                // console.log(res)
-                fileData = dataURLtoFile(res.data.base64, items.fileImage);
-                // console.log("Here is JavaScript File Object", fileData)
-                form.setFieldsValue({
-                  upload: [{ name: items.fileImage, originFileObj: fileData }],
-                });
+
+          if (items.fileImage !== null) {
+            let fileData = null;
+            let url = Config.ImageHosting + items.localImage;
+            // console.log(url)
+            await Http.get(Config.api.base64, {
+              params: {
+                url,
+              },
+            }).then((res) => {
+              // console.log(res)
+              fileData = dataURLtoFile(res.data.base64, items.fileImage);
+              // console.log("Here is JavaScript File Object", fileData)
+              form.setFieldsValue({
+                upload: [{ name: items.fileImage, originFileObj: fileData }],
               });
-            }
-            setValueContent(items.content)
-  
+            });
+          }
+          setValueContent(items.content);
         }
       })
       .catch((e) => {
-        console.log(e)
+        console.log(e);
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
@@ -649,15 +653,11 @@ export default function Article() {
     }
   };
 
-
   const btnEditor = () => {
     // console.log(quillRef.current.root.innerHTML)
     // console.log(Delta)
-    quillRef.current.root.innerHTML = valueContent
-  }
-  
-
-
+    quillRef.current.root.innerHTML = valueContent;
+  };
 
   return (
     <div className="h-full w-full">
@@ -671,7 +671,7 @@ export default function Article() {
           />
           <Button
             className="ml-2"
-            type="primary"
+            // type="primary"
             icon={<PlusOutlined />}
             onClick={addModal}
           >
@@ -742,7 +742,7 @@ export default function Article() {
               },
             ]}
           >
-          <Select
+            <Select
               disabled={!isEdit}
               dropdownStyle={{ zIndex: 2000 }}
               placeholder="กรุณาเลือกประเภท"
@@ -752,7 +752,7 @@ export default function Article() {
               optionFilterProp="label"
               options={dataSelector()}
             />
-             </Form.Item>
+          </Form.Item>
           <Form.Item
             name="seo"
             label="SEO"
@@ -764,7 +764,7 @@ export default function Article() {
               disabled={!isEdit}
             />
           </Form.Item>
-       
+
           <Form.Item
             name="upload"
             label="รูปภาพปก"
@@ -800,20 +800,16 @@ export default function Article() {
               <Button disabled={!isEdit}>อัพโหลดภาพ</Button>
             </Upload>
           </Form.Item>
-    
+
           <div className="my-4">
-          {/* <Editor
-        ref={quillRef}
-        readOnly={!isEdit}
-       
-      /> */}
-       
-            <p className="hidden">Current value: {valueContent}</p> 
+            <Editor ref={quillRef} readOnly={!isEdit} />
+
+            <p className="hidden">Current value: {valueContent}</p>
           </div>
           <div className="flex justify-end !mb-0">
             <Button onClick={handleCancel}>ยกเลิก</Button>
             {!isEdit ? null : (
-              <Button   className="ml-2" type="primary" htmlType="submit">
+              <Button className="ml-2" type="primary" htmlType="submit">
                 บันทึก
               </Button>
             )}

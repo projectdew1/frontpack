@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import {
   BulbOutlined,
+  ContactsOutlined,
   DashboardOutlined,
   FileTextOutlined,
   LogoutOutlined,
@@ -21,7 +22,6 @@ import Config from "@/hook/setApi/Config";
 import Http from "@/hook/setApi/Http";
 import { useAppContext } from "../_context/wrapper";
 
-
 const { Header, Sider, Content } = Layout;
 
 export default function LayoutManager({
@@ -29,7 +29,7 @@ export default function LayoutManager({
 }: {
   children: React.ReactNode;
 }) {
-  const { noRead, setnoRead } = useAppContext()
+  const { noRead, setnoRead } = useAppContext();
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -72,6 +72,11 @@ export default function LayoutManager({
       key: "4",
       icon: <FileTextOutlined />,
       label: "บทความ",
+    },
+    {
+      key: "7",
+      icon: <ContactsOutlined />,
+      label: "ผลงานของเรา",
     },
     {
       key: "5",
@@ -149,6 +154,11 @@ export default function LayoutManager({
         path = "/manager/logout";
         keyCurrunt = "6";
         break;
+      case "7":
+      case "/manager/portfolio":
+        path = "/manager/portfolio";
+        keyCurrunt = "7";
+        break;
     }
     if (key) {
       setCurrent(keyPath);
@@ -169,7 +179,6 @@ export default function LayoutManager({
 
   const titleChange = () => {
     switch (current) {
-
       case "1":
         return "Dashboard";
       case "2":
@@ -184,7 +193,8 @@ export default function LayoutManager({
         return "หมวดหมู่";
       case "332":
         return "สินค้า";
-
+      case "7":
+        return "ผลงานของเรา";
       default:
         return "";
     }
@@ -219,19 +229,18 @@ export default function LayoutManager({
       <Layout>
         <Header className="!bg-white !p-0 flex justify-between">
           <div>
-
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
             />
-          <label className=" text-2xl font-extralight">{titleChange()}</label>
-            </div>
+            <label className=" text-2xl font-extralight">{titleChange()}</label>
+          </div>
           <Button
             type="text"
             icon={mode ? <MoonOutlined /> : <BulbOutlined />}

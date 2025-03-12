@@ -16,6 +16,7 @@ const category = host + "/product"
 const page = host + "/page"
 const blog = host + "/blog"
 const news = host + "/news"
+const portfolio = host + "/portfolio"
 
 const api = {
 	mock: category + "/get",
@@ -87,6 +88,19 @@ const api = {
 	findNewsShow:news + "/findNewsShow",
 	findNewsIdShow:news + "/findNewsIdShow",
 	getTypeNews:news + "/getTypeNews",
+
+	//portfolio
+	getPortAll:portfolio,
+	getPortById:portfolio + "/getPortfolioById",
+	addPort:portfolio + "/addPortfolio",
+	updatePort:portfolio + "/updatePortfolio",
+	deletePort:portfolio + "/deletePortfolio",
+
+	//
+	portGroup:portfolio + "/portfolioGroup",
+	portMachine:portfolio + "/portfolioByMachineId",
+	portById:portfolio + "/portfolioById",
+
 }
 
 export default {
