@@ -96,7 +96,7 @@ const NewsSlider = () => {
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
+                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 group-hover:blur-sm" // just an example
                     />
                   ) : (
                     <Image
@@ -107,7 +107,7 @@ const NewsSlider = () => {
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 " // just an example
+                      className=" object-cover rounded-xl shadow-lg  transition duration-300 group-hover:scale-110 group-hover:blur-sm" // just an example
                     />
                   )}
                   <div className="absolute rounded-full w-24 h-24 bg-kmspurple text-center flex justify-center items-center text-white opacity-0 font-extralight transition duration-300 group-hover:opacity-100">
@@ -118,12 +118,16 @@ const NewsSlider = () => {
                   <h4 className="mt-2 text-white font-extralight">
                     {news.typeNews}
                   </h4>
-                  <p className="text-white font-light text-2xl line-clamp-2">
-                    {news.title}
-                  </p>
-                  <p className="text-white  font-extralight mt-4 line-clamp-2 h-[100px]">
-                    {convert(news.content)}
-                  </p>
+                  <div className="h-[50px]">
+                    <p className="text-white font-light text-2xl line-clamp-2">
+                      {news.title}
+                    </p>
+                  </div>
+                  <div className="h-[90px] mt-4">
+                    <p className="text-white  font-extralight line-clamp-4 ">
+                      {convert(news.content)}
+                    </p>
+                  </div>
 
                   <p className="text-white  font-extralight mt-4 text-right">
                     อ่านต่อ...

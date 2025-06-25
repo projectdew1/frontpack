@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Header from "./_component/header";
 import Footer from "./_component/footer";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { kanit } from '../font'
+import { kanit } from "../font";
 
 export const metadata: Metadata = {
   title: "| KMS",

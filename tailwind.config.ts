@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        "kms-header": "1120px",
+      },
       fontFamily: {
         kanit: ["var(--font-kanit)"],
       },

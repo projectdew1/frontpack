@@ -24,11 +24,11 @@ const navData: NavData[] = [
   { id: 2, name: "เกี่ยวกับ KMS", link: "/about" },
   // { id: 3, name: "วิธีสั่งซื้อและชำระเงิน", link: "/payment" },
   { id: 4, name: "ข่าวและบทความ", link: "/blog" },
+  { id: 6, name: "ผลงานของเรา", link: "/portfolio" },
   { id: 5, name: "ติดต่อเรา", link: "/contact" },
 ];
 
 const Header = () => {
-  const router = useRouter();
   const pathname = usePathname();
   const scrolled = useScrollTop();
   const [data, setData] = useState<HeaderPage[]>([]);
@@ -64,19 +64,36 @@ const Header = () => {
   );
 
   const items = () => {
-    let listitems:MenuItem[] = [];
-    let children:MenuItem[] = [];
-    {data.map((x, i) => (
-      children.push({ key: `children${i}`, label: <Link href={`/category/${x.enID}`}>{x.name}</Link> })
-    ))}
-    listitems.push({ key: "1", label: <Link href={"/"}>{"หน้าหลัก"}</Link> })
-    listitems.push({ key: "2", label: <Link href={"/about"}>{"เกี่ยวกับ KMS"}</Link> })
-    listitems.push({ key: "3", label: <Link href={"/blog"}>{"ข่าวและบทความ"}</Link> })
-    listitems.push({ key: "3", label: <Link href={"/contact"}>{"ติดต่อเรา"}</Link> })
-    listitems.push({ key: "4", label: "ผลิตภัณฑ์", children: children})
+    let listitems: MenuItem[] = [];
+    let children: MenuItem[] = [];
+    {
+      data.map((x, i) =>
+        children.push({
+          key: `children${i}`,
+          label: <Link href={`/category/${x.enID}`}>{x.name}</Link>,
+        })
+      );
+    }
+    listitems.push({ key: "1", label: <Link href={"/"}>{"หน้าหลัก"}</Link> });
+    listitems.push({
+      key: "2",
+      label: <Link href={"/about"}>{"เกี่ยวกับ KMS"}</Link>,
+    });
+    listitems.push({
+      key: "3",
+      label: <Link href={"/blog"}>{"ข่าวและบทความ"}</Link>,
+    });
+    listitems.push({
+      key: "6",
+      label: <Link href={"/portfolio"}>{"ผลงานของเรา"}</Link>,
+    });
+    listitems.push({
+      key: "4",
+      label: <Link href={"/contact"}>{"ติดต่อเรา"}</Link>,
+    });
+    listitems.push({ key: "5", label: "ผลิตภัณฑ์", children: children });
     return listitems;
-  }
-  
+  };
 
   const onClick = () => {
     setOpen(false);
@@ -120,12 +137,12 @@ const Header = () => {
           </h2>
         </Link>
         <div
-          className="justify-end self-center items-center cursor-pointer lg:hidden"
+          className="justify-end self-center items-center cursor-pointer kms-header:hidden"
           onClick={() => setOpen(true)}
         >
           <MenuOutlined className="text-xl" />
         </div>
-        <div className="justify-end self-center items-center hidden lg:block">
+        <div className="justify-end self-center items-center hidden kms-header:block">
           <div className="flex justify-end self-center items-center ">
             {navData.map((row: NavData, index: number) => {
               if (row.id == 1) {

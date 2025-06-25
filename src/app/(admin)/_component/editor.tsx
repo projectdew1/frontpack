@@ -1,13 +1,16 @@
 "use client";
 
-import Quill from 'quill';
+import dynamic from "next/dynamic";
+import "quill/dist/quill.snow.css";
+import React, { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 
-import 'quill/dist/quill.snow.css';
-import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
-
+const Quill = dynamic(() => import("quill"), { ssr: false });
 // Editor is an uncontrolled React component
 const Editor = forwardRef(
-  ({ readOnly, defaultValue, onTextChange, onSelectionChange }:any, ref:any) => {
+  (
+    { readOnly, defaultValue, onTextChange, onSelectionChange }: any,
+    ref: any
+  ) => {
     const containerRef = useRef(null);
     const defaultValueRef = useRef(defaultValue);
     const onTextChangeRef = useRef(onTextChange);
@@ -23,12 +26,12 @@ const Editor = forwardRef(
     }, [ref, readOnly]);
 
     useEffect(() => {
-      const container:any = containerRef.current;
+      const container: any = containerRef.current;
       const editorContainer = container.appendChild(
-        container.ownerDocument.createElement('div'),
+        container.ownerDocument.createElement("div")
       );
       const quill = new Quill(editorContainer, {
-        theme: 'snow',
+        theme: "snow",
       });
 
       ref.current = quill;
@@ -47,14 +50,14 @@ const Editor = forwardRef(
 
       return () => {
         ref.current = null;
-        container.innerHTML = '';
+        container.innerHTML = "";
       };
     }, [ref]);
 
     return <div ref={containerRef}></div>;
-  },
+  }
 );
 
-Editor.displayName = 'Editor';
+Editor.displayName = "Editor";
 
 export default Editor;

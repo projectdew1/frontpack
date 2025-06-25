@@ -1,11 +1,11 @@
 const master = "authorization"
 
-// const hosting = "https://localhost:5001"
-// const ImageHosting = "https://localhost:5001"
+const hosting = "https://localhost:5001"
+const ImageHosting = "https://localhost:5001"
 
 
-const hosting = "https://kmspacking.com:5003"
-const ImageHosting = "https://kmspacking.com:5003"
+// const hosting = "https://kmspacking.com:5003"
+// const ImageHosting = "https://kmspacking.com:5003"
 const base_url = "https://kmspacking.com"
 
 const tailer = "| KMS MACHINERY Co. Ltd | บริษัท เคเอ็มเอส แมชชีนเนอรี่ จำกัด"
