@@ -140,11 +140,21 @@ const Footer = () => {
                 <br />
                 <a
                   className="cursor-pointer"
-                  href="tel:0869180060"
+                  href="tel:0626968999"
                   target="_blank"
                 >
                   <label className="text-sm font-extralight cursor-pointer">
-                    086-918-0060
+                    062-696-8999
+                  </label>
+                </a>
+                <br />
+                <a
+                  className="cursor-pointer"
+                  href="tel:0943494482"
+                  target="_blank"
+                >
+                  <label className="text-sm font-extralight cursor-pointer">
+                    094-349-4482
                   </label>
                 </a>
               </div>

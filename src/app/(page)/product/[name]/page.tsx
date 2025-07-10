@@ -31,14 +31,14 @@ export async function generateMetadata({
   params: { name: string };
 }) {
   const { name } = params;
-  const {  seo,items } = await getData(`${decodeURIComponent(name)}`);
+  const { seo, items } = await getData(`${decodeURIComponent(name)}`);
   // const {img} = await getCatagory(`${decodeURIComponent(name)}`)
   // const des = items.map((r:any) => r.typeName);
   // console.log(img)
   return {
-    title:  `${seo} ${Config.tailer}`,
+    title: `${seo} ${Config.tailer}`,
     // description: `${des.join(",")}`,
-  }
+  };
 }
 
 export default async function Product({
@@ -78,41 +78,46 @@ export default async function Product({
   };
 
   const technical = () => {
-    const data = items.detailTech.map((r:any,i:number) => {
-        return {
-            key:i,
-            name: r.technicallyName,
-            descript:r.detailTech
-        }
-    })
-      
-      const columns = [
-        {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'Descript',
-          dataIndex: 'descript',
-          key: 'descript',
-        },
-        
-      ];
-      if(items.detailTech.length > 0){
+    const data = items.detailTech.map((r: any, i: number) => {
+      return {
+        key: i,
+        name: r.technicallyName,
+        descript: r.detailTech,
+      };
+    });
 
-          return  ( <div>
-        <hr className="w-full my-8" />
-        <h1 className=" text-2xl font-thin mb-2">{"คุณสมบัติทางเทคนิค"}</h1>
-        <br />
-        <div className="w-full lg:w-1/2">
-        <Table dataSource={data} columns={columns} pagination={false} showHeader={false} />
+    const columns = [
+      {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+      },
+      {
+        title: "Descript",
+        dataIndex: "descript",
+        key: "descript",
+      },
+    ];
+    if (items.detailTech.length > 0) {
+      return (
+        <div>
+          <hr className="w-full my-8" />
+          <h1 className=" text-2xl font-thin mb-2">{"คุณสมบัติทางเทคนิค"}</h1>
+          <br />
+          <div className="w-full lg:w-1/2">
+            <Table
+              dataSource={data}
+              columns={columns}
+              pagination={false}
+              showHeader={false}
+            />
+          </div>
         </div>
-      </div>);
-    }else{
-        return null;
+      );
+    } else {
+      return null;
     }
-  }
+  };
 
   const videoYoutube = () => {
     if (items.video.length > 0) {
@@ -169,7 +174,7 @@ export default async function Product({
             <div className="flex flex-col lg:flex-row flex-1 gap-8">
               <div className="w-full h-full flex flex-1 bg-gray-100 rounded-2xl lg:w-1/2">
                 <div className="flex flex-1 justify-center items-center p-10 py-16">
-                <GalleryImage items={items} />
+                  <GalleryImage items={items} />
                 </div>
               </div>
               <div className="w-full flex flex-1 lg:w-1/2">
@@ -215,11 +220,19 @@ export default async function Product({
                       </a>
                       <a
                         className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer"
-                        href="tel:0869180060"
+                        href="tel:0626968999"
                         target="_blank"
                       >
                         <PhoneOutlined className="mr-1" />
-                        086-918-0060
+                        062-696-8999
+                      </a>
+                      <a
+                        className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer"
+                        href="tel:0943494482"
+                        target="_blank"
+                      >
+                        <PhoneOutlined className="mr-1" />
+                        094-349-4482
                       </a>
                       <a
                         className="flex flex-row items-center justify-center bg-[#00c300] rounded-2xl p-2 text-center text-white cursor-pointer"
@@ -235,7 +248,7 @@ export default async function Product({
               </div>
             </div>
             {technical()}
-              {videoYoutube()}
+            {videoYoutube()}
           </div>
         </div>
       </div>
