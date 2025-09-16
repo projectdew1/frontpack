@@ -33,7 +33,11 @@ import type { FormProps, MenuProps, TableColumnsType } from "antd";
 
 import moment from "moment";
 import momentz from "moment-timezone";
-import { dataURLtoFile, normFile } from "../../_actions/imageconvert";
+import {
+  dataURLtoFile,
+  normFile,
+  uploadBase,
+} from "../../_actions/imageconvert";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import { useAppContext } from "../../_context/wrapper";
@@ -342,26 +346,26 @@ export default function Product() {
     switch (e.key) {
       case "0":
         setRowId(record.machineId);
-        await findMachine(record.machineId,false);
+        await findMachine(record.machineId, false);
         setTitleModal(`แก้ไขสินค้า ${record.machineId}`);
         selectGroup();
-        selectTech()
+        selectTech();
         setIsEdit(true);
         setIsModalOpen(true);
         break;
       case "1":
-        await findMachine(record.machineId,false);
+        await findMachine(record.machineId, false);
         setTitleModal(`มุมมองสินค้า ${record.machineId}`);
         selectGroup();
-        selectTech()
+        selectTech();
         setIsEdit(false);
         setIsModalOpen(true);
         break;
       case "2":
-        await findMachine(record.machineId,true);
+        await findMachine(record.machineId, true);
         setTitleModal(`คัดลอกสินค้า ${record.machineId}`);
         selectGroup();
-        selectTech()
+        selectTech();
         setIsEdit(true);
         setIsAdd(true);
         setIsModalOpen(true);
@@ -428,38 +432,31 @@ export default function Product() {
   const multiMachine = async (image: any) => {
     if (image.length > 0) {
       await image.map(async (row: any, index: number) => {
-        let url = Config.ImageHosting + row.local;
-
-        await Http.get(Config.api.base64, {
-          params: {
-            url,
-          },
-        }).then((res) => {
-          let fileDatamulti = dataURLtoFile(res.data.base64, row.fileName);
-          // console.log("Here is JavaScript File Object", fileDatamulti)
-          if (form.getFieldValue("uploadmulti")) {
-            form.setFieldsValue({
-              uploadmulti: [
-                ...form.getFieldValue("uploadmulti"),
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          } else {
-            form.setFieldsValue({
-              uploadmulti: [
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          }
-        });
+        const url = Config.ImageHosting + row.local;
+        const data = await uploadBase(url);
+        const fileDatamulti = dataURLtoFile(data, row.fileName);
+        if (form.getFieldValue("uploadmulti")) {
+          form.setFieldsValue({
+            uploadmulti: [
+              ...form.getFieldValue("uploadmulti"),
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        } else {
+          form.setFieldsValue({
+            uploadmulti: [
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        }
       });
     }
   };
@@ -520,19 +517,11 @@ export default function Product() {
           if (!copy) {
             if (items.fileImage !== null) {
               let fileData = null;
-              let url = Config.ImageHosting + items.localImage;
-              // console.log(url)
-              await Http.get(Config.api.base64, {
-                params: {
-                  url,
-                },
-              }).then((res) => {
-                // console.log(res)
-                fileData = dataURLtoFile(res.data.base64, items.fileImage);
-                // console.log("Here is JavaScript File Object", fileData)
-                form.setFieldsValue({
-                  upload: [{ name: items.fileImage, originFileObj: fileData }],
-                });
+              const url = Config.ImageHosting + items.localImage;
+              const data = await uploadBase(url);
+              fileData = dataURLtoFile(data, items.fileImage);
+              form.setFieldsValue({
+                upload: [{ name: items.fileImage, originFileObj: fileData }],
               });
             }
           }
@@ -556,7 +545,7 @@ export default function Product() {
     setIsEdit(true);
     setIsAdd(true);
     selectGroup();
-    selectTech()
+    selectTech();
     setIsModalOpen(true);
   };
 
@@ -653,254 +642,265 @@ export default function Product() {
     }
   };
 
-  const addProduct = async (value:any) => {
+  const addProduct = async (value: any) => {
     const cookies = getCookie(Config.master);
     const token = cookies ? jwtDecode<any>(cookies).user : null;
-		const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
-		const number = value.price ? value.number : null
-		const discount = value.price ? value.discount : null
-		let data = new FormData()
-		data.append("FormFile", upload)
-		if (value.uploadmulti) {
-			if (value.uploadmulti.length > 0) {
-				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
-			}
-		}
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
+    const number = value.price ? value.number : null;
+    const discount = value.price ? value.discount : null;
+    let data = new FormData();
+    data.append("FormFile", upload);
+    if (value.uploadmulti) {
+      if (value.uploadmulti.length > 0) {
+        value.uploadmulti.map((row: any) =>
+          data.append("FormFileMulti", row.originFileObj)
+        );
+      }
+    }
 
-		if (value.technical) {
-			if (value.technical.length > 0) {
-				value.technical.map((row:any, i:number) => {
-					data.append(`technical[${i}].tech`, row.tech)
-					data.append(`technical[${i}].name`, row.name)
-				})
-			}
-		}
+    if (value.technical) {
+      if (value.technical.length > 0) {
+        value.technical.map((row: any, i: number) => {
+          data.append(`technical[${i}].tech`, row.tech);
+          data.append(`technical[${i}].name`, row.name);
+        });
+      }
+    }
 
-		if (value.video) {
-			if (value.video.length > 0) {
-				value.video.map((row:any, i:number) => {
-					data.append(`videos[${i}]`, row)
-				})
-			}
-		}
+    if (value.video) {
+      if (value.video.length > 0) {
+        value.video.map((row: any, i: number) => {
+          data.append(`videos[${i}]`, row);
+        });
+      }
+    }
 
-		if (value.manual) {
-			if (value.manual.length > 0) {
-				value.manual.map((row:any, i:number) => {
-					data.append(`manual[${i}]`, row)
-				})
-			}
-		}
+    if (value.manual) {
+      if (value.manual.length > 0) {
+        value.manual.map((row: any, i: number) => {
+          data.append(`manual[${i}]`, row);
+        });
+      }
+    }
 
-		if (value.detail) {
-			if (value.detail.length > 0) {
-				value.detail.map((row:any, i:number) => {
-					data.append(`detail[${i}]`, row)
-				})
-			}
-		}
+    if (value.detail) {
+      if (value.detail.length > 0) {
+        value.detail.map((row: any, i: number) => {
+          data.append(`detail[${i}]`, row);
+        });
+      }
+    }
 
-		setSpinning(true)
-		setLoading(true)
-		await Http.post(Config.api.addmachine, data, {
-			params: {
-				seo: value.seo,
-				typeID: value.group,
-				machineName: value.product,
-				machineModels: value.model,
-				price: number,
-				discount: discount,
-				soldout: value.soldout,
-				user: token,
-				explain: value.explain,
-			},
-			headers: {
-				"content-type": "multipart/form-data",
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+    setSpinning(true);
+    setLoading(true);
+    await Http.post(Config.api.addmachine, data, {
+      params: {
+        seo: value.seo,
+        typeID: value.group,
+        machineName: value.product,
+        machineModels: value.model,
+        price: number,
+        discount: discount,
+        soldout: value.soldout,
+        user: token,
+        explain: value.explain,
+      },
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "บันทึกข้อมูลเรียบร้อย!",
             onOk() {
-              handleCancel()
+              handleCancel();
             },
             onCancel() {
-              handleCancel()
+              handleCancel();
             },
           });
-				
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-				setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
-  const updateProduct = async (value:any) => {
+  const updateProduct = async (value: any) => {
     const cookies = getCookie(Config.master);
     const token = cookies ? jwtDecode<any>(cookies).user : null;
-		const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
 
-		const number = value.price ? value.number : null
-		const discount = value.price ? value.discount : null
+    const number = value.price ? value.number : null;
+    const discount = value.price ? value.discount : null;
 
-		let data = new FormData()
-		data.append("FormFile", upload)
-		if (value.uploadmulti) {
-			if (value.uploadmulti.length > 0) {
-				value.uploadmulti.map((row:any) => data.append("FormFileMulti", row.originFileObj))
-			}
-		}
-		if (value.technical) {
-			if (value.technical.length > 0) {
-				value.technical.map((row:any, i:number) => {
-					data.append(`technical[${i}].tech`, row.tech)
-					data.append(`technical[${i}].name`, row.name)
-				})
-			}
-		}
+    let data = new FormData();
+    data.append("FormFile", upload);
+    if (value.uploadmulti) {
+      if (value.uploadmulti.length > 0) {
+        value.uploadmulti.map((row: any) =>
+          data.append("FormFileMulti", row.originFileObj)
+        );
+      }
+    }
+    if (value.technical) {
+      if (value.technical.length > 0) {
+        value.technical.map((row: any, i: number) => {
+          data.append(`technical[${i}].tech`, row.tech);
+          data.append(`technical[${i}].name`, row.name);
+        });
+      }
+    }
 
-		if (value.video) {
-			if (value.video.length > 0) {
-				value.video.map((row:any, i:number) => {
-					data.append(`videos[${i}]`, row)
-				})
-			}
-		}
+    if (value.video) {
+      if (value.video.length > 0) {
+        value.video.map((row: any, i: number) => {
+          data.append(`videos[${i}]`, row);
+        });
+      }
+    }
 
-		if (value.manual) {
-			if (value.manual.length > 0) {
-				value.manual.map((row:any, i:number) => {
-					data.append(`manual[${i}]`, row)
-				})
-			}
-		}
+    if (value.manual) {
+      if (value.manual.length > 0) {
+        value.manual.map((row: any, i: number) => {
+          data.append(`manual[${i}]`, row);
+        });
+      }
+    }
 
-		if (value.detail) {
-			if (value.detail.length > 0) {
-				value.detail.map((row:any, i:number) => {
-					data.append(`detail[${i}]`, row)
-				})
-			}
-		}
+    if (value.detail) {
+      if (value.detail.length > 0) {
+        value.detail.map((row: any, i: number) => {
+          data.append(`detail[${i}]`, row);
+        });
+      }
+    }
 
-		setSpinning(true)
-		setLoading(true)
-		await Http.post(Config.api.updatemachine, data, {
-			params: {
-				id: rowId,
-				seo: value.seo,
-				typeID: value.group,
-				machineName: value.product,
-				machineModels: value.model,
-				price: number,
-				discount: discount,
-				soldout: value.soldout,
-				user: token,
-				explain: value.explain,
-			},
-			headers: {
-				"content-type": "multipart/form-data",
-			},
-		})
-			.then(res => {
-				const check = res.data.message
-				if (check === "success") {
+    setSpinning(true);
+    setLoading(true);
+    await Http.post(Config.api.updatemachine, data, {
+      params: {
+        id: rowId,
+        seo: value.seo,
+        typeID: value.group,
+        machineName: value.product,
+        machineModels: value.model,
+        price: number,
+        discount: discount,
+        soldout: value.soldout,
+        user: token,
+        explain: value.explain,
+      },
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แก้ไขข้อมูลเรียบร้อย!",
             onOk() {
-              handleCancel()
+              handleCancel();
             },
             onCancel() {
-              handleCancel()
+              handleCancel();
             },
           });
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: check,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-				setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
-  const deleteProduct = async (id:any) => {
-    setSpinning(true)
-		setLoading(true)
-		await Http.delete(Config.api.deletemachine, {
-			params: {
-				id,
-			},
-		})
-			.then(res => {
-				const data = res.data.message
-				if (data === "success") {
+  const deleteProduct = async (id: any) => {
+    setSpinning(true);
+    setLoading(true);
+    await Http.delete(Config.api.deletemachine, {
+      params: {
+        id,
+      },
+    })
+      .then((res) => {
+        const data = res.data.message;
+        if (data === "success") {
           modal.success({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "ลบข้อมูลเรียบร้อย!",
           });
-				} else {
+        } else {
           modal.error({
             cancelText: "ยกเลิก",
             okText: "ตกลง",
             title: "แจ้งเตือน!",
             content: data,
           });
-				}
-			})
-			.catch(e => {
+        }
+      })
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
           content: e.response,
         });
-			})
-			.finally(async () => {
-				await getData()
-				setSpinning(false)
-		setLoading(false)
-			})
-	}
+      })
+      .finally(async () => {
+        await getData();
+        setSpinning(false);
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="h-full w-full">
@@ -1249,7 +1249,7 @@ export default function Product() {
                       noStyle
                     >
                       <Input
-                                   className="!ml-2"
+                        className="!ml-2"
                         maxLength={400}
                         placeholder="กรุณากรอกคุณสมบัติทางเทคนิค"
                         style={{ width: "60%" }}
@@ -1281,92 +1281,144 @@ export default function Product() {
             )}
           </Form.List>
           <Form.List name="manual">
-									{(fields, { add, remove }, { errors }) => (
-										<>
-											{fields.map((field, index) => (
-												<Form.Item {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={index === 0 ? "วิธีใช้" : ""} required={false} key={field.key}>
-													<Form.Item
-														{...field}
-														validateTrigger={["onChange", "onBlur"]}
-														rules={[
-															{
-																required: true,
-																whitespace: true,
-																message: "กรุณากรอกวิธีใช้",
-															},
-														]}
-														noStyle
-													>
-														<Input
-															maxLength={400}
-															placeholder="กรุณากรอกวิธีใช้"
-															disabled={!isEdit}
-															style={{ width: "80%" }}
-														
-														/>
-													</Form.Item>
-													{fields.length > 0 ? <MinusCircleOutlined className="ml-2" onClick={() => remove(field.name)} /> : null}
-												</Form.Item>
-											))}
-											<Form.Item label={"เพิ่มวิธีใช้"}>
-												<Button type="dashed" onClick={() => add()} style={{ width: "60%" }} disabled={!isEdit} icon={<PlusOutlined />}>
-													เพิ่มวิธีใช้
-												</Button>
-												<Form.ErrorList errors={errors} />
-											</Form.Item>
-										</>
-									)}
-								</Form.List>
-                <Form.List name="video">
-									{(fields, { add, remove }, { errors }) => (
-										<>
-											{fields.map((field, index) => (
-												<Form.Item {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={index === 0 ? "ลิ้งค์วีดีโอ" : ""} required={false} key={field.key}>
-													<Form.Item
-														{...field}
-														validateTrigger={["onChange", "onBlur"]}
-														rules={[
-															{
-																required: true,
-																whitespace: true,
-																message: "กรุณากรอกลิ้งค์วีดีโอ",
-															},
-														]}
-														noStyle
-													>
-														<Input
-															maxLength={400}
-															placeholder="กรุณากรอกลิ้งค์วีดีโอ"
-															disabled={!isEdit}
-															style={{ width: "80%" }}
-														
-														/>
-													</Form.Item>
-													{fields.length > 0 ? <MinusCircleOutlined className="ml-2" onClick={() => remove(field.name)} /> : null}
-												</Form.Item>
-											))}
-											<Form.Item label={"เพิ่มลิ้งค์วีดีโอ"}>
-												<Button type="dashed" onClick={() => add()} style={{ width: "60%" }} disabled={!isEdit} icon={<PlusOutlined />}>
-													เพิ่มลิ้งค์วีดีโอ
-												</Button>
-												<Form.ErrorList errors={errors} />
-											</Form.Item>
-										</>
-									)}
-								</Form.List>
-                <Form.Item name="uploadmulti" label="รูปภาพประกอบ" valuePropName="fileList" getValueFromEvent={normFile} extra="อัพโหลดได้ 10 รูป">
-									<Upload name="logo" action={Config.api.mock} maxCount={10} multiple listType="picture" beforeUpload={beforeUpload}>
-										<Button disabled={!isEdit}>อัพโหลดภาพ</Button>
-									</Upload>
-								</Form.Item>
-                <div className="flex justify-end">
-                <Button  onClick={handleCancel}>
-							ปิด
-						</Button>
-                {isEdit ?<Button type="primary"  htmlType="submit" loading={loading} className="ml-2" >
-								{isAdd ? "เพิ่มข้อมูล" : "แก้ไขข้อมูล"}
-							</Button> : null}
-                </div>
+            {(fields, { add, remove }, { errors }) => (
+              <>
+                {fields.map((field, index) => (
+                  <Form.Item
+                    {...(index === 0
+                      ? formItemLayout
+                      : formItemLayoutWithOutLabel)}
+                    label={index === 0 ? "วิธีใช้" : ""}
+                    required={false}
+                    key={field.key}
+                  >
+                    <Form.Item
+                      {...field}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: "กรุณากรอกวิธีใช้",
+                        },
+                      ]}
+                      noStyle
+                    >
+                      <Input
+                        maxLength={400}
+                        placeholder="กรุณากรอกวิธีใช้"
+                        disabled={!isEdit}
+                        style={{ width: "80%" }}
+                      />
+                    </Form.Item>
+                    {fields.length > 0 ? (
+                      <MinusCircleOutlined
+                        className="ml-2"
+                        onClick={() => remove(field.name)}
+                      />
+                    ) : null}
+                  </Form.Item>
+                ))}
+                <Form.Item label={"เพิ่มวิธีใช้"}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: "60%" }}
+                    disabled={!isEdit}
+                    icon={<PlusOutlined />}
+                  >
+                    เพิ่มวิธีใช้
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+          <Form.List name="video">
+            {(fields, { add, remove }, { errors }) => (
+              <>
+                {fields.map((field, index) => (
+                  <Form.Item
+                    {...(index === 0
+                      ? formItemLayout
+                      : formItemLayoutWithOutLabel)}
+                    label={index === 0 ? "ลิ้งค์วีดีโอ" : ""}
+                    required={false}
+                    key={field.key}
+                  >
+                    <Form.Item
+                      {...field}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: "กรุณากรอกลิ้งค์วีดีโอ",
+                        },
+                      ]}
+                      noStyle
+                    >
+                      <Input
+                        maxLength={400}
+                        placeholder="กรุณากรอกลิ้งค์วีดีโอ"
+                        disabled={!isEdit}
+                        style={{ width: "80%" }}
+                      />
+                    </Form.Item>
+                    {fields.length > 0 ? (
+                      <MinusCircleOutlined
+                        className="ml-2"
+                        onClick={() => remove(field.name)}
+                      />
+                    ) : null}
+                  </Form.Item>
+                ))}
+                <Form.Item label={"เพิ่มลิ้งค์วีดีโอ"}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: "60%" }}
+                    disabled={!isEdit}
+                    icon={<PlusOutlined />}
+                  >
+                    เพิ่มลิ้งค์วีดีโอ
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+          <Form.Item
+            name="uploadmulti"
+            label="รูปภาพประกอบ"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            extra="อัพโหลดได้ 10 รูป"
+          >
+            <Upload
+              name="logo"
+              action={Config.api.mock}
+              maxCount={10}
+              multiple
+              listType="picture"
+              beforeUpload={beforeUpload}
+            >
+              <Button disabled={!isEdit}>อัพโหลดภาพ</Button>
+            </Upload>
+          </Form.Item>
+          <div className="flex justify-end">
+            <Button onClick={handleCancel}>ปิด</Button>
+            {isEdit ? (
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                className="ml-2"
+              >
+                {isAdd ? "เพิ่มข้อมูล" : "แก้ไขข้อมูล"}
+              </Button>
+            ) : null}
+          </div>
         </Form>
       </Modal>
       <Spin spinning={spinning} fullscreen />

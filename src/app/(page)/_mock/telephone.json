@@ -1,0 +1,30 @@
+[
+  {
+    "id": "e2634b21-84b4-4287-9263-e278997dff6b",
+    "telephone": "034-116655",
+    "name": "Office",
+    "number": "034116655",
+    "isPhoneNumber": false
+  },
+  {
+    "id": "2089765d-6692-421f-a82c-27e2b59782d6",
+    "telephone": "095-456-5550",
+    "name": "กิตติกร",
+    "number": "0954565550",
+    "isPhoneNumber": true
+  },
+  {
+    "id": "6518fd35-4fd6-4015-84e1-5c4eb4d69ac4",
+    "telephone": "062-696-8999",
+    "name": "แหม่ม",
+    "number": "0626968999",
+    "isPhoneNumber": true
+  },
+  {
+    "id": "3629460a-c648-4972-b5c5-5a4bab4c6a87",
+    "telephone": "094-349-4482",
+    "name": "ชมพู่",
+    "number": "0943494482",
+    "isPhoneNumber": true
+  }
+]

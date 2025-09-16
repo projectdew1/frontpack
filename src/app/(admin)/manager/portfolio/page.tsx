@@ -9,7 +9,7 @@ import Config from "@/hook/setApi/Config";
 import Http from "@/hook/setApi/Http";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
-import { dataURLtoFile } from "../../_actions/imageconvert";
+import { dataURLtoFile, uploadBase } from "../../_actions/imageconvert";
 
 const Portfolio = () => {
   const [form] = Form.useForm();
@@ -51,38 +51,31 @@ const Portfolio = () => {
     if (image.length > 0) {
       for (let index = 0; index < image.length; index++) {
         const row = image[index];
-        let url = Config.ImageHosting + row.local;
-
-        await Http.get(Config.api.base64, {
-          params: {
-            url,
-          },
-        }).then((res) => {
-          let fileDatamulti = dataURLtoFile(res.data.base64, row.fileName);
-          // console.log("Here is JavaScript File Object", fileDatamulti)
-          if (form.getFieldValue("uploadmulti")) {
-            form.setFieldsValue({
-              uploadmulti: [
-                ...form.getFieldValue("uploadmulti"),
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          } else {
-            form.setFieldsValue({
-              uploadmulti: [
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          }
-        });
+        const url = Config.ImageHosting + row.local;
+        const data = await uploadBase(url);
+        const fileDatamulti = dataURLtoFile(data, row.fileName);
+        if (form.getFieldValue("uploadmulti")) {
+          form.setFieldsValue({
+            uploadmulti: [
+              ...form.getFieldValue("uploadmulti"),
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        } else {
+          form.setFieldsValue({
+            uploadmulti: [
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        }
       }
     }
   };
@@ -108,16 +101,12 @@ const Portfolio = () => {
 
           if (items.fileImage !== null) {
             let fileData = null;
-            let url = Config.ImageHosting + items.localImage;
-            await Http.get(Config.api.base64, {
-              params: {
-                url,
-              },
-            }).then((res) => {
-              fileData = dataURLtoFile(res.data.base64, items.fileImage);
-              form.setFieldsValue({
-                upload: [{ name: items.fileImage, originFileObj: fileData }],
-              });
+            const url = Config.ImageHosting + items.localImage;
+
+            const data = await uploadBase(url);
+            fileData = dataURLtoFile(data, items.fileImage);
+            form.setFieldsValue({
+              upload: [{ name: items.fileImage, originFileObj: fileData }],
             });
           }
           await multiImage(items.imageList);
@@ -334,7 +323,7 @@ const Portfolio = () => {
         getOptionMachine();
         setRowId(record.portfolioId);
         await findPort(record.portfolioId);
-        setTitle(`แก้ไขบทความ ${record.portfolioId}`);
+        setTitle(`แก้ไขผลงาน ${record.portfolioId}`);
 
         setIsModalOpen(true);
         break;
@@ -342,7 +331,7 @@ const Portfolio = () => {
         getOptionMachine();
         setRowId("");
         await findPort(record.portfolioId);
-        setTitle(`มุมมองบทความ ${record.portfolioId}`);
+        setTitle(`มุมมองผลงาน ${record.portfolioId}`);
 
         setIsModalOpen(true);
         break;

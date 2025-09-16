@@ -25,7 +25,11 @@ import type { FormProps, MenuProps, TableColumnsType } from "antd";
 
 import moment from "moment";
 import momentz from "moment-timezone";
-import { dataURLtoFile, normFile } from "../../_actions/imageconvert";
+import {
+  dataURLtoFile,
+  normFile,
+  uploadBase,
+} from "../../_actions/imageconvert";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 
@@ -103,7 +107,11 @@ export default function Catagory() {
       width: 50,
       align: "center",
       render: (text: any, record: any, index: any) =>
-        text ? <Image src={Config.ImageHosting + text} width={50} preview={false} /> : "",
+        text ? (
+          <Image src={Config.ImageHosting + text} width={50} preview={false} />
+        ) : (
+          ""
+        ),
     },
     {
       title: () => <label style={{ fontWeight: "bold" }}>{"SEO"}</label>,
@@ -453,16 +461,10 @@ export default function Catagory() {
             let fileData = null;
             let url = Config.ImageHosting + items.localImage;
 
-            await Http.get(Config.api.base64, {
-              params: {
-                url,
-              },
-            }).then((res) => {
-              fileData = dataURLtoFile(res.data.base64, items.fileImage);
-              // console.log("Here is JavaScript File Object", fileData)
-              form.setFieldsValue({
-                upload: [{ name: items.fileImage, originFileObj: fileData }],
-              });
+            const data = await uploadBase(url);
+            fileData = dataURLtoFile(data, items.fileImage);
+            form.setFieldsValue({
+              upload: [{ name: items.fileImage, originFileObj: fileData }],
             });
           }
         }
@@ -500,8 +502,6 @@ export default function Catagory() {
       await updateCategory(values);
     }
   };
-
- 
 
   const beforeUpload = (file: any) => {
     if (file.type === "image/png" || file.type === "image/jpeg") {
@@ -604,7 +604,7 @@ export default function Catagory() {
             label="รูปภาพปก"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            extra={'อัพโหลดภาพได้รูปเดียว'}
+            extra={"อัพโหลดภาพได้รูปเดียว"}
           >
             <Upload
               name="logo"
@@ -614,7 +614,6 @@ export default function Catagory() {
               beforeUpload={beforeUpload}
               onRemove={() => false}
               disabled={!isEdit}
-
             >
               <Button disabled={!isEdit}>{`อัพโหลดภาพ`}</Button>
             </Upload>

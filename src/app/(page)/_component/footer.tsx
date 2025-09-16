@@ -3,6 +3,7 @@
 import { FaFacebookF, FaLine, FaTiktok, FaYoutube } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
+import phone from "@/app/(page)/_mock/telephone.json";
 
 const Footer = () => {
   return (
@@ -118,45 +119,24 @@ const Footer = () => {
                 </label>
               </div>
               <div className="mt-4">
-                <a
-                  className="cursor-pointer"
-                  href="tel:034116655"
-                  target="_blank"
-                >
-                  <label className="text-sm font-extralight cursor-pointer">
-                    034-116655
-                  </label>
-                </a>
-                <br />
-                <a
-                  className="cursor-pointer"
-                  href="tel:0954565550"
-                  target="_blank"
-                >
-                  <label className="text-sm font-extralight cursor-pointer">
-                    095-456-5550
-                  </label>
-                </a>
-                <br />
-                <a
-                  className="cursor-pointer"
-                  href="tel:0626968999"
-                  target="_blank"
-                >
-                  <label className="text-sm font-extralight cursor-pointer">
-                    062-696-8999
-                  </label>
-                </a>
-                <br />
-                <a
-                  className="cursor-pointer"
-                  href="tel:0943494482"
-                  target="_blank"
-                >
-                  <label className="text-sm font-extralight cursor-pointer">
-                    094-349-4482
-                  </label>
-                </a>
+                {phone.map((row, index) => {
+                  return (
+                    <>
+                      <a
+                        className="cursor-pointer"
+                        href={`tel:${row.number}`}
+                        target="_blank"
+                      >
+                        <label className="text-sm font-extralight cursor-pointer">
+                          {`${row.telephone} ${
+                            row.isPhoneNumber ? `(คุณ${row.name})` : ""
+                          }`}
+                        </label>
+                      </a>
+                      {phone.length == index + 1 ? null : <br />}
+                    </>
+                  );
+                })}
               </div>
             </div>
           </div>

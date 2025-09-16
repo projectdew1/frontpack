@@ -26,7 +26,11 @@ import type { FormProps, MenuProps, TableColumnsType } from "antd";
 
 import moment from "moment";
 import momentz from "moment-timezone";
-import { dataURLtoFile, normFile } from "../../_actions/imageconvert";
+import {
+  dataURLtoFile,
+  normFile,
+  uploadBase,
+} from "../../_actions/imageconvert";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 
@@ -305,17 +309,12 @@ export default function Group() {
           });
           if (items.fileImage !== null) {
             let fileData = null;
-            let url = Config.ImageHosting + items.localImage;
-            await Http.get(Config.api.base64, {
-              params: {
-                url,
-              },
-            }).then((res) => {
-              fileData = dataURLtoFile(res.data.base64, items.fileImage);
-              // console.log("Here is JavaScript File Object", fileData)
-              form.setFieldsValue({
-                upload: [{ name: items.fileImage, originFileObj: fileData }],
-              });
+            const url = Config.ImageHosting + items.localImage;
+            const data = await uploadBase(url);
+            fileData = dataURLtoFile(data, items.fileImage);
+
+            form.setFieldsValue({
+              upload: [{ name: items.fileImage, originFileObj: fileData }],
             });
           }
         }
@@ -372,89 +371,44 @@ export default function Group() {
       });
   };
 
-  const updateGrorp = async (value:any) => {
+  const updateGrorp = async (value: any) => {
     const cookies = getCookie(Config.master);
     const token = cookies ? jwtDecode<any>(cookies).user : null;
-    const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
-    let data = new FormData()
-    data.append("FormFile", upload)
-    setLoading(true)
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
+    let data = new FormData();
+    data.append("FormFile", upload);
+    setLoading(true);
     await Http.put(Config.api.updatetype, data, {
-        params: {
-            id: rowId,
-            user: token,
-            seo: value.groupSeo,
-            typeName: value.groupName,
-            categoryID: value.groupCategory,
-        },
-    })
-        .then(res => {
-            const check = res.data.message
-            if (check === "success") {
-              modal.success({
-                cancelText: "ยกเลิก",
-                okText: "ตกลง",
-                title: "แก้ไขข้อมูลเรียบร้อย!",
-              });
-            } else {
-              modal.error({
-                cancelText: "ยกเลิก",
-                okText: "ตกลง",
-                title: "แจ้งเตือน!",
-                content: check,
-              });
-            }
-        })
-        .catch(e => {
-            modal.error({
-              cancelText: "ยกเลิก",
-              okText: "ตกลง",
-              title: "แจ้งเตือนจาก server!",
-              content: e.response,
-            });
-        })
-        .finally(async () => {
-            await getData()
-            setLoading(false)
-            handleCancel()
-        })
-}
-
-const addGroup = async (value:any) => {
-  const cookies = getCookie(Config.master);
-  const token = cookies ? jwtDecode<any>(cookies).user : null;
-  const upload = value.upload ? (value.upload.length > 0 ? value.upload[0].originFileObj : null) : null
-  let data = new FormData()
-  data.append("FormFile", upload)
-
-  setLoading(true)
-  await Http.post(Config.api.addtype, data, {
       params: {
-          user: token,
-          seo: value.groupSeo,
-          typeName: value.groupName,
-          categoryID: value.groupCategory,
+        id: rowId,
+        user: token,
+        seo: value.groupSeo,
+        typeName: value.groupName,
+        categoryID: value.groupCategory,
       },
-  })
-      .then(res => {
-          const check = res.data.message
-          if (check === "success") {
-         
-              modal.success({
-                cancelText: "ยกเลิก",
-                okText: "ตกลง",
-                title: "บันทึกข้อมูลเรียบร้อย!",
-              });
-          } else {
-            modal.error({
-              cancelText: "ยกเลิก",
-              okText: "ตกลง",
-              title: "แจ้งเตือน!",
-              content: check,
-            });
-          }
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
+          modal.success({
+            cancelText: "ยกเลิก",
+            okText: "ตกลง",
+            title: "แก้ไขข้อมูลเรียบร้อย!",
+          });
+        } else {
+          modal.error({
+            cancelText: "ยกเลิก",
+            okText: "ตกลง",
+            title: "แจ้งเตือน!",
+            content: check,
+          });
+        }
       })
-      .catch(e => {
+      .catch((e) => {
         modal.error({
           cancelText: "ยกเลิก",
           okText: "ตกลง",
@@ -463,11 +417,63 @@ const addGroup = async (value:any) => {
         });
       })
       .finally(async () => {
-        await getData()
-            setLoading(false)
-            handleCancel()
+        await getData();
+        setLoading(false);
+        handleCancel();
+      });
+  };
+
+  const addGroup = async (value: any) => {
+    const cookies = getCookie(Config.master);
+    const token = cookies ? jwtDecode<any>(cookies).user : null;
+    const upload = value.upload
+      ? value.upload.length > 0
+        ? value.upload[0].originFileObj
+        : null
+      : null;
+    let data = new FormData();
+    data.append("FormFile", upload);
+
+    setLoading(true);
+    await Http.post(Config.api.addtype, data, {
+      params: {
+        user: token,
+        seo: value.groupSeo,
+        typeName: value.groupName,
+        categoryID: value.groupCategory,
+      },
+    })
+      .then((res) => {
+        const check = res.data.message;
+        if (check === "success") {
+          modal.success({
+            cancelText: "ยกเลิก",
+            okText: "ตกลง",
+            title: "บันทึกข้อมูลเรียบร้อย!",
+          });
+        } else {
+          modal.error({
+            cancelText: "ยกเลิก",
+            okText: "ตกลง",
+            title: "แจ้งเตือน!",
+            content: check,
+          });
+        }
       })
-}
+      .catch((e) => {
+        modal.error({
+          cancelText: "ยกเลิก",
+          okText: "ตกลง",
+          title: "แจ้งเตือนจาก server!",
+          content: e.response,
+        });
+      })
+      .finally(async () => {
+        await getData();
+        setLoading(false);
+        handleCancel();
+      });
+  };
 
   const addModal = () => {
     setTitleModal(`เพิ่มหมวดหมู่ผลิตภัณฑ์`);
@@ -653,7 +659,7 @@ const addGroup = async (value:any) => {
             label="รูปภาพปก"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            extra={'อัพโหลดภาพได้รูปเดียว'}
+            extra={"อัพโหลดภาพได้รูปเดียว"}
           >
             <Upload
               name="logo"

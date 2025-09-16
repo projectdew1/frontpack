@@ -25,14 +25,22 @@ import type { FormProps, MenuProps, TableColumnsType } from "antd";
 
 import moment from "moment";
 import momentz from "moment-timezone";
-import { dataURLtoFile, normFile } from "../../_actions/imageconvert";
+import {
+  dataURLtoFile,
+  normFile,
+  uploadBase,
+} from "../../_actions/imageconvert";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import Config from "@/hook/setApi/Config";
 import Http from "@/hook/setApi/Http";
 
 import { convert } from "html-to-text";
-import Editor from "../../_component/editor";
+// import Editor from "../../_component/editor";
+
+import { Editor } from "@tiptap/core";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 const layout = {
   labelCol: { span: 4 },
@@ -582,19 +590,11 @@ export default function Article() {
 
           if (items.fileImage !== null) {
             let fileData = null;
-            let url = Config.ImageHosting + items.localImage;
-            // console.log(url)
-            await Http.get(Config.api.base64, {
-              params: {
-                url,
-              },
-            }).then((res) => {
-              // console.log(res)
-              fileData = dataURLtoFile(res.data.base64, items.fileImage);
-              // console.log("Here is JavaScript File Object", fileData)
-              form.setFieldsValue({
-                upload: [{ name: items.fileImage, originFileObj: fileData }],
-              });
+            const url = Config.ImageHosting + items.localImage;
+            const data = await uploadBase(url);
+            fileData = dataURLtoFile(data, items.fileImage);
+            form.setFieldsValue({
+              upload: [{ name: items.fileImage, originFileObj: fileData }],
             });
           }
           setValueContent(items.content);
@@ -606,7 +606,7 @@ export default function Article() {
           cancelText: "ยกเลิก",
           okText: "ตกลง",
           title: "แจ้งเตือนจาก server!",
-          content: e?.response.data.message,
+          content: e.message,
         });
       })
       .finally(() => {
@@ -617,46 +617,49 @@ export default function Article() {
   const multiImage = async (image: any) => {
     if (image.length > 0) {
       await image.map(async (row: any, index: number) => {
-        let url = Config.ImageHosting + row.local;
+        const url = Config.ImageHosting + row.local;
 
-        await Http.get(Config.api.base64, {
-          params: {
-            url,
-          },
-        }).then((res) => {
-          let fileDatamulti = dataURLtoFile(res.data.base64, row.fileName);
-          // console.log("Here is JavaScript File Object", fileDatamulti)
-          if (form.getFieldValue("uploadmulti")) {
-            form.setFieldsValue({
-              uploadmulti: [
-                ...form.getFieldValue("uploadmulti"),
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          } else {
-            form.setFieldsValue({
-              uploadmulti: [
-                {
-                  key: index,
-                  name: row.fileName,
-                  originFileObj: fileDatamulti,
-                },
-              ],
-            });
-          }
-        });
+        const data = await uploadBase(url);
+        const fileDatamulti = dataURLtoFile(data, row.fileName);
+
+        if (form.getFieldValue("uploadmulti")) {
+          form.setFieldsValue({
+            uploadmulti: [
+              ...form.getFieldValue("uploadmulti"),
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        } else {
+          form.setFieldsValue({
+            uploadmulti: [
+              {
+                key: index,
+                name: row.fileName,
+                originFileObj: fileDatamulti,
+              },
+            ],
+          });
+        }
       });
     }
   };
 
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: valueContent,
+    // Don't render immediately on the server to avoid SSR issues
+    immediatelyRender: false,
+  });
+
   const btnEditor = () => {
     // console.log(quillRef.current.root.innerHTML)
     // console.log(Delta)
-    quillRef.current.root.innerHTML = valueContent;
+    // quillRef.current.root.innerHTML = valueContent;
+    editor?.commands.setContent(valueContent);
   };
 
   return (
@@ -803,8 +806,7 @@ export default function Article() {
 
           <div className="my-4">
             {/* <Editor ref={quillRef} readOnly={!isEdit} /> */}
-
-            <p className="hidden">Current value: {valueContent}</p>
+            <EditorContent editor={editor} />
           </div>
           <div className="flex justify-end !mb-0">
             <Button onClick={handleCancel}>ยกเลิก</Button>

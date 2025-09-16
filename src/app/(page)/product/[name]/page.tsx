@@ -7,6 +7,14 @@ import { PhoneOutlined } from "@ant-design/icons";
 import { FaLine } from "react-icons/fa6";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import GalleryImage from "../../_component/galleryImage";
+import phone from "@/app/(page)/_mock/telephone.json";
+import {
+  ReactElement,
+  JSXElementConstructor,
+  ReactNode,
+  ReactPortal,
+  PromiseLikeOfReactNode,
+} from "react";
 
 async function getData(name: string) {
   const https = require("https");
@@ -202,38 +210,28 @@ export default async function Product({
                   )}
                   <div className="mt-4">
                     {detail()}
-                    <p className="mt-4 text-xl font-semibold">รายละเอียด</p>
+                    {items.explain.length > 0 ? (
+                      <p className="mt-4 text-xl font-semibold">รายละเอียด</p>
+                    ) : null}
                     <p>
                       &emsp;&emsp;&emsp;&emsp;&emsp;
                       {items.explain.length > 0
                         ? items.explain[0].explainDetail
                         : ""}
                     </p>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      <a
-                        className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer "
-                        href="tel:0954565550"
-                        target="_blank"
-                      >
-                        <PhoneOutlined className="mr-1" />
-                        095-456-5550
-                      </a>
-                      <a
-                        className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer"
-                        href="tel:0626968999"
-                        target="_blank"
-                      >
-                        <PhoneOutlined className="mr-1" />
-                        062-696-8999
-                      </a>
-                      <a
-                        className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer"
-                        href="tel:0943494482"
-                        target="_blank"
-                      >
-                        <PhoneOutlined className="mr-1" />
-                        094-349-4482
-                      </a>
+                    <div className="grid  sm:grid-cols-2 gap-4 mt-4">
+                      {phone
+                        .filter((items) => items.isPhoneNumber == true)
+                        .map((row) => (
+                          <a
+                            className="flex flex-row items-center justify-center bg-kmsorange rounded-2xl p-2 text-center text-white cursor-pointer"
+                            href={`tel:${row.number}`}
+                            target="_blank"
+                          >
+                            <PhoneOutlined className="mr-1" />
+                            {`${row.telephone} (คุณ${row.name})`}
+                          </a>
+                        ))}
                       <a
                         className="flex flex-row items-center justify-center bg-[#00c300] rounded-2xl p-2 text-center text-white cursor-pointer"
                         href="https://page.line.me/?accountId=kmsmachinery"
