@@ -8,13 +8,6 @@ import { FaLine } from "react-icons/fa6";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import GalleryImage from "../../_component/galleryImage";
 import phone from "@/app/(page)/_mock/telephone.json";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  PromiseLikeOfReactNode,
-} from "react";
 
 async function getData(name: string) {
   const https = require("https");

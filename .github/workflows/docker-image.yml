@@ -2,42 +2,39 @@ name: Docker Hub and Deploy Nextjs
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_FE }} .
-        docker push ${{ secrets.DOCKERHUB_FE }}
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: ${{ secrets.SSH_PORT }}
-        script: |
-         docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-         docker image rm ${{ secrets.DOCKERHUB_FE }}
-         docker pull ${{ secrets.DOCKERHUB_FE }}
-         docker stop pack || true
-         docker run --rm -d --name pack -p 443:443 -p 80:80 ${{ secrets.DOCKERHUB_FE }}
-        
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_FE }} .
+          docker push ${{ secrets.DOCKERHUB_FE }}
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST_NEW_KMS }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            docker stop pack || true
+            docker rm pack || true
+            docker pull ${{ secrets.DOCKERHUB_FE }}
+            docker run -d --name pack -p 443:443 -p 80:80 ${{ secrets.DOCKERHUB_FE }}

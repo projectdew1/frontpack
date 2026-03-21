@@ -41,6 +41,7 @@ import { convert } from "html-to-text";
 import { Editor } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import MenuBar from "../../_component/menubar";
 
 const layout = {
   labelCol: { span: 4 },
@@ -804,9 +805,9 @@ export default function Article() {
             </Upload>
           </Form.Item>
 
-          <div className="my-4">
-            {/* <Editor ref={quillRef} readOnly={!isEdit} /> */}
-            <EditorContent editor={editor} />
+          <div className="my-4 h-full flex flex-col ">
+            <MenuBar editor={editor!} />
+            <EditorContent editor={editor} className="myeditor" />
           </div>
           <div className="flex justify-end !mb-0">
             <Button onClick={handleCancel}>ยกเลิก</Button>
